@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucrare de laborator – Informatică aplicată</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script>window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] }, svg: { fontCache: "global" } };</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+<div class="topbar"><div class="in">
+  <a class="logo" href="index.html"><span>‹/›</span> Informatică aplicată · Laborator</a>
+  <div class="sp"></div><div class="who" id="who"></div>
+</div></div>
+
+<header class="lab-head">
+  <div class="crumbs"><a href="index.html">Lucrări</a> › <span id="crumb"></span> &nbsp;·&nbsp; <a id="prev" href="#">‹ anterioara</a> &nbsp; <a id="next" href="#">următoarea ›</a></div>
+  <div class="lab-title">
+    <div><div class="tag" id="tag"></div><h1 id="titlu"></h1></div>
+    <div class="att" id="att">
+      <div class="lbl">Prezență<br><span id="att-st">neînregistrată</span></div>
+      <input id="att-cod" placeholder="COD" maxlength="8" aria-label="Codul sesiunii">
+      <button class="btn primary" id="att-btn">Înregistrează</button>
+    </div>
+  </div>
+</header>
+
+<!-- SUS: breviarul teoretic -->
+<section class="breviar"><div class="card">
+  <div class="breviar-grid">
+    <div>
+      <h2>Breviar teoretic</h2>
+      <div class="breviar-body" id="breviar"></div>
+      <button class="btn more" id="more">Afișează tot breviarul</button>
+    </div>
+    <div class="side">
+      <details open><summary>Obiective</summary><div id="obiective"></div></details>
+      <details><summary>Rezultatele învățării</summary><div id="rezultate"></div></details>
+    </div>
+  </div>
+</div></section>
+
+<section class="work" id="work">
+  <!-- STÂNGA: modul de lucru -->
+  <div class="left">
+    <div class="card mod">
+      <h2>Modul de lucru</h2>
+      <div id="mod"></div>
+      <h2>Prelucrarea rezultatelor</h2>
+      <div id="prelucrare"></div>
+    </div>
+  </div>
+
+  <!-- DREAPTA: elementele necesare -->
+  <aside class="right">
+    <div class="panel">
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-t="materiale">Materiale</button>
+        <button class="tab" data-t="cod">Cod sursă</button>
+        <button class="tab" data-t="referat">Referat</button>
+        <button class="tab" data-t="intrebari">Întrebări</button>
+        <span class="sp"></span>
+        <button class="btn widen" id="widen" title="Extinde panoul pe toată lățimea">⇔ Lărgește</button>
+      </div>
+      <div class="pane on" id="p-materiale"></div>
+      <div class="pane" id="p-cod"></div>
+      <div class="pane" id="p-referat"></div>
+      <div class="pane" id="p-intrebari"></div>
+    </div>
+  </aside>
+</section>
+
+<div id="print-area"></div>
+
+<script src="config.js"></script>
+<script src="assets/specs.js"></script>
+<script src="assets/content.js"></script>
+<script src="assets/app.js"></script>
+<script src="assets/lucrare.js"></script>
+</body>
+</html>
