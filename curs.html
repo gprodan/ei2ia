@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curs – Informatică aplicată</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script>window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] }, svg: { fontCache: "global" } };</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+<div class="topbar"><div class="in">
+  <a class="logo" href="index.html"><span>‹/›</span> Informatică aplicată</a>
+  <nav class="nav"><a href="index.html">Acasă</a><a href="curs.html" class="on">Curs</a><a href="laborator.html">Laborator</a></nav>
+  <div class="sp"></div><div class="who" id="who"></div>
+</div></div>
+
+<div class="course">
+  <aside class="c-nav">
+    <div class="c-nav-in">
+      <div class="kicker">Cursuri</div>
+      <ol id="lista"></ol>
+      <a class="btn" style="width:100%;text-align:center;margin-top:10px" href="docs/Informatica_aplicata_Note_de_curs.docx" download>Note de curs (Word)</a>
+    </div>
+  </aside>
+
+  <article class="c-main">
+    <div class="crumbs"><a href="index.html">Acasă</a> › <a href="index.html#curs">Curs</a> › <span id="crumb"></span></div>
+    <div class="tag" id="tag"></div>
+    <h1 id="titlu"></h1>
+    <div class="c-goals">
+      <div class="card"><h3>Obiective</h3><div id="obiective"></div></div>
+      <div class="card"><h3>Rezultatele învățării</h3><div id="rezultate"></div></div>
+    </div>
+    <section class="card c-body"><h2>Conținut</h2><div id="continut"></div></section>
+    <section class="card c-body c-ex"><h2>Exerciții și probleme rezolvate</h2><div id="exercitii"></div></section>
+    <section class="card c-body c-tema"><h2 id="tema-titlu">Temă de casă</h2><div id="tema"></div></section>
+    <div class="c-pager"><a class="btn" id="prev"></a><span class="sp"></span><a class="btn primary" id="next"></a></div>
+  </article>
+
+  <aside class="c-toc"><div class="c-toc-in"><div class="kicker">Pe această pagină</div><ul id="toc"></ul></div></aside>
+</div>
+
+<script src="config.js"></script>
+<script src="assets/curs.js"></script>
+<script src="assets/specs.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); }, esc = APP.esc;
+  var id = Number(new URLSearchParams(location.search).get("id") || 1);
+  var C = CURSURI.filter(function (x) { return x.id === id; })[0] || CURSURI[0]; id = C.id;
+  document.title = "Cursul " + id + " – Informatică aplicată";
+  $("#crumb").textContent = "Cursul " + id; $("#tag").textContent = "CURSUL " + id + " DIN 14";
+  $("#titlu").textContent = C.titlu;
+  $("#obiective").innerHTML = C.obiective; $("#rezultate").innerHTML = C.rezultate;
+  $("#continut").innerHTML = C.continut; $("#exercitii").innerHTML = C.exercitii;
+  $("#tema-titlu").textContent = C.tema_titlu; $("#tema").innerHTML = C.tema;
+  $("#lista").innerHTML = CURSURI.map(function (c) {
+    return '<li class="' + (c.id === id ? "on" : "") + '"><a href="curs.html?id=' + c.id + '"><b>' + c.id + "</b>" + esc(c.titlu) + "</a></li>";
+  }).join("");
+  if (id > 1) { $("#prev").href = "curs.html?id=" + (id - 1); $("#prev").textContent = "‹ Cursul " + (id - 1); } else $("#prev").style.visibility = "hidden";
+  if (id < 14) { $("#next").href = "curs.html?id=" + (id + 1); $("#next").textContent = "Cursul " + (id + 1) + " ›"; } else { $("#next").href = "laborator.html"; $("#next").textContent = "Aplicația de laborator ›"; }
+
+  // cuprins în pagină
+  var toc = [];
+  document.querySelectorAll("#continut h4").forEach(function (h, i) { h.id = h.id || "s" + i; toc.push('<li><a href="#' + h.id + '">' + esc(h.textContent) + "</a></li>"); });
+  ["c-ex", "c-tema"].forEach(function (cls) { var s = document.querySelector("." + cls); s.id = cls; toc.push('<li class="major"><a href="#' + cls + '">' + esc(s.querySelector("h2").textContent) + "</a></li>"); });
+  $("#toc").innerHTML = toc.join("");
+
+  // cod: buton de copiere + evidențiere sintaxă
+  document.querySelectorAll(".c-body pre").forEach(function (pre) {
+    var cls = (pre.className || "").split(" ")[0], code = pre.querySelector("code");
+    var lang = { c: "c", cpp: "cpp", java: "java", python: "python", bash: "bash", cmake: "cmake", powershell: "powershell", dockerfile: "dockerfile", yaml: "yaml", matlab: "matlab", javascript: "javascript" }[cls];
+    if (lang) code.className = "language-" + lang; else code.className = "language-plaintext";
+    var w = document.createElement("div"); w.className = "snip";
+    w.innerHTML = '<header><span class="lang">' + esc(cls || "pseudocod") + '</span><span class="sp"></span><button class="btn">Copiază</button></header>';
+    pre.parentNode.insertBefore(w, pre); w.appendChild(pre);
+    w.querySelector("button").onclick = function () {
+      (navigator.clipboard ? navigator.clipboard.writeText(code.textContent) : Promise.reject()).then(function () { APP.toast("Cod copiat.", "ok"); }, function () { APP.toast("Selectați și copiați manual (Ctrl+C)."); });
+    };
+  });
+  window.addEventListener("load", function () { if (window.hljs) document.querySelectorAll(".c-body pre code").forEach(function (c) { hljs.highlightElement(c); }); });
+
+  // evidențierea secțiunii curente în cuprins
+  var links = Array.prototype.slice.call(document.querySelectorAll("#toc a"));
+  var obs = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) links.forEach(function (a) { a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id); }); });
+  }, { rootMargin: "-80px 0px -70% 0px" });
+  links.forEach(function (a) { var t = document.getElementById(a.getAttribute("href").slice(1)); if (t) obs.observe(t); });
+})();
+</script>
+</body>
+</html>

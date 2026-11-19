@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informatică aplicată – Energetică Industrială</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar"><div class="in">
+  <a class="logo" href="index.html"><span>‹/›</span> Informatică aplicată</a>
+  <nav class="nav"><a href="index.html" class="on">Acasă</a><a href="curs.html">Curs</a><a href="laborator.html">Laborator</a></nav>
+  <div class="sp"></div><div class="who" id="who"></div>
+</div></div>
+
+<header class="entry-hero"><div class="in">
+  <div class="kicker">Universitatea „Ovidius” din Constanța · FIMIM · Energetică Industrială, anul II, sem. 3 · ME2116a</div>
+  <h1>Informatică aplicată</h1>
+  <p>De la algoritm și pseudocod la microcontrolere, platforme IoT și geamănul digital al unei instalații energetice. Disciplina are 2 ore de curs și 1 oră de laborator pe săptămână (4 credite, colocviu).</p>
+  <div class="jump"><a class="btn primary" href="#curs">Cursul · 14 prelegeri</a><a class="btn accent" href="#laborator">Laboratorul · 7 lucrări</a></div>
+</div></header>
+
+<main class="wrap entry">
+  <section id="curs" class="entry-sec">
+    <div class="entry-head">
+      <div>
+        <div class="kicker">Secțiunea 1</div>
+        <h2>Cursul</h2>
+        <p>Paisprezece prelegeri, fiecare cu obiective și rezultatele învățării, conținut teoretic cu cod sursă, probleme rezolvate pas cu pas și o temă de casă. Exemplele vin din energetică: consumuri, randamente, curbe de sarcină, temperaturi.</p>
+      </div>
+      <div class="entry-actions">
+        <a class="btn primary" href="curs.html?id=1">Începe cu Cursul 1</a>
+        <a class="btn" href="docs/Informatica_aplicata_Note_de_curs.docx" download>Notele de curs (Word)</a>
+      </div>
+    </div>
+    <div class="modules" id="m-curs"></div>
+  </section>
+
+  <section id="laborator" class="entry-sec">
+    <div class="entry-head">
+      <div>
+        <div class="kicker">Secțiunea 2</div>
+        <h2>Aplicația de laborator</h2>
+        <p>Șapte lucrări practice cu breviar teoretic, mod de lucru, cod sursă gata de copiat și referat completat direct în pagină. Prezența se înregistrează cu codul sesiunii, iar referatul ajunge în foaia de calcul a disciplinei, unde măsurătorile și testul grilă se notează automat.</p>
+      </div>
+      <div class="entry-actions">
+        <a class="btn accent" href="laborator.html">Deschide aplicația</a>
+        <a class="btn" href="docs/Informatica_aplicata_Indrumar_de_laborator.docx" download>Îndrumarul (Word)</a>
+      </div>
+    </div>
+    <div class="features">
+      <div><b>Prezență</b><span>cod de sesiune valabil doar în timpul laboratorului</span></div>
+      <div><b>Referat în pagină</b><span>tabele cu calcule automate, ciornă salvată</span></div>
+      <div><b>Notare automată</b><span>măsurători și test grilă, cu feedback imediat</span></div>
+      <div><b>Situația mea</b><span>prezențe și note pentru toate lucrările</span></div>
+    </div>
+    <div class="modules" id="m-lab"></div>
+  </section>
+
+  <footer class="entry-foot muted" id="foot"></footer>
+</main>
+
+<script src="config.js"></script>
+<script src="assets/descrieri.js"></script>
+<script src="assets/curs.js"></script>
+<script src="assets/content.js"></script>
+<script src="assets/specs.js"></script>
+<script src="assets/app.js"></script>
+<script>
+function card(href, tag, titlu, desc, extra) {
+  return '<a class="card module" href="' + href + '"><div class="num">' + tag + "</div><h3>" + APP.esc(titlu) + "</h3><p>" + APP.esc(desc) + "</p>" + (extra || "") + "</a>";
+}
+document.getElementById("m-curs").innerHTML = CURSURI.map(function (c) {
+  return card("curs.html?id=" + c.id, "CURSUL " + c.id, c.titlu, DESCRIERI.curs[c.id] || "");
+}).join("");
+document.getElementById("m-lab").innerHTML = LABS.map(function (l) {
+  return card("lucrare.html?id=" + l.id, "LUCRAREA " + l.id, l.titlu, DESCRIERI.lab[l.id] || "",
+    '<div class="badges"><span class="badge">' + l.cod.length + " fișiere cod</span><span class=\"badge\">referat online</span></div>");
+}).join("");
+document.getElementById("foot").textContent = APP.CFG.CADRU_DIDACTIC + " · " + APP.CFG.DISCIPLINA + " · " + new Date().getFullYear();
+</script>
+</body>
+</html>

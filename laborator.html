@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informatică aplicată – Laborator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar"><div class="in">
+  <a class="logo" href="index.html"><span>‹/›</span> Informatică aplicată</a>
+  <nav class="nav"><a href="index.html">Acasă</a><a href="curs.html">Curs</a><a href="laborator.html" class="on">Laborator</a></nav>
+  <div class="sp"></div><div class="who" id="who"></div>
+</div></div>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="muted" id="program"></div>
+      <h1>Lucrări de laborator</h1>
+      <p>Șapte lucrări, de la primul program C până la geamănul digital al unei instalații energetice. Fiecare pagină de lucrare are breviarul teoretic sus, modul de lucru în stânga și, în dreapta, tot ce aveți nevoie la masa de lucru: materiale, cod sursă, întrebări și referatul de completat.</p>
+      <div class="card" style="margin-top:14px">
+        <h3 style="margin-top:0">Cum se desfășoară o ședință</h3>
+        <ol class="steps-list">
+          <li><b>Identificați-vă</b> o singură dată (e-mail instituțional, nume, grupa).</li>
+          <li>La începutul laboratorului introduceți <b>codul sesiunii</b> afișat de cadrul didactic: prezența se înregistrează automat.</li>
+          <li>Parcurgeți modul de lucru și completați <b>referatul</b> direct în pagină (ciorna se salvează automat).</li>
+          <li>Apăsați <b>Verifică</b> pentru un control rapid, apoi <b>Trimite</b>. Primiți imediat nota automată; aplicația individuală și răspunsurile deschise sunt verificate de cadrul didactic.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Situația mea</h3>
+      <div id="situatie" class="muted">Se încarcă…</div>
+      <h3>Notarea referatului (10 p)</h3>
+      <table>
+        <tr><th>Componentă</th><th>Puncte</th><th>Mod</th></tr>
+        <tr><td>Măsurători și calcule</td><td>4</td><td>automat</td></tr>
+        <tr><td>Test grilă (5 întrebări)</td><td>3</td><td>automat</td></tr>
+        <tr><td>Aplicația individuală</td><td>2</td><td>provizoriu + profesor</td></tr>
+        <tr><td>Întrebări deschise, concluzii</td><td>1</td><td>provizoriu + profesor</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <h2>Lucrările</h2>
+  <div class="labs" id="labs"></div>
+
+  <details class="card intro" style="margin-top:24px"><summary><b>Introducere, norme de lucru și evaluare</b></summary><div id="intro"></div></details>
+</main>
+
+<script src="config.js"></script>
+<script src="assets/specs.js"></script>
+<script src="assets/content.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.getElementById("program").textContent = APP.CFG.DISCIPLINA + " · " + APP.CFG.PROGRAM;
+document.getElementById("intro").innerHTML = window.LAB_INTRO;
+function randeaza(st) {
+  st = st || { prezente: {}, referate: {} };
+  document.getElementById("labs").innerHTML = LABS.map(function (l) {
+    var p = st.prezente[l.id], r = st.referate[l.id], b = [];
+    b.push(p ? '<span class="badge ok">prezent' + (p === "Întârziat" ? " (întârziat)" : "") + "</span>" : '<span class="badge">fără prezență</span>');
+    if (r) {
+      var nota = r.notaFinala != null && r.notaFinala !== "" ? r.notaFinala : r.notaAuto;
+      b.push('<span class="badge ' + (nota >= 5 ? "ok" : "bad") + '">referat: ' + nota + (r.notaFinala ? "" : " (automat)") + "</span>");
+    } else b.push('<span class="badge warn">referat netrimis</span>');
+    b.push('<span class="badge">' + l.cod.length + " fișiere cod</span>");
+    return '<a class="card lab-card" href="lucrare.html?id=' + l.id + '"><div class="num">LUCRAREA ' + l.id + '</div><h3>' + APP.esc(l.titlu) + '</h3><div class="badges">' + b.join("") + "</div></a>";
+  }).join("");
+  var np = Object.keys(st.prezente).length, nr = Object.keys(st.referate).length;
+  var s = APP.student();
+  document.getElementById("situatie").innerHTML = s
+    ? "<b>" + APP.esc(s.nume) + "</b>, grupa " + APP.esc(s.grupa) + "<br>Prezențe: <b>" + np + "/7</b> · Referate trimise: <b>" + nr + "/7</b>" + (APP.DEMO ? '<br><span class="demo-flag">datele modului demonstrativ sunt doar locale</span>' : "")
+    : 'Nu sunteți identificat. <button class="btn primary" onclick="APP.cereStudent(true).then(incarca)">Identificare</button>';
+}
+function incarca() {
+  randeaza();
+  if (APP.student()) APP.api("status").then(function (r) { if (r.ok) randeaza(r); else APP.toast(r.mesaj, "bad"); });
+}
+incarca();
+</script>
+</body>
+</html>
